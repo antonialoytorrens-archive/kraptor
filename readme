@@ -1,0 +1,140 @@
+Kraptor
+-------
+
+---------------------------------------------------------------------
+
+Official Web Site
+
+http://kraptor.sf.net/
+
+---------------------------------------------------------------------
+
+Copyright 2002, 2003, 2004,  Kronoman
+Released under the MIT license
+In loving memory of my father.
+Made in Argentina
+
+---------------------------------------------------------------------
+
+After years of oppression, the slaved people of the world have raised against their masters.
+You, has a mercenary pilot, has been contacted by the popular rebellion to fight against the forces of oppression.
+In the morning, you jump into your cockpit and start up the engines.
+Its time to get airborne and start the attack.
+Get ready to scramble the scum hired by the masters.
+Murder for freedom is the only way, you're a man on a mission, don't defraud us...
+
+---------------------------------------------------------------------
+
+What is this?
+
+Kraptor is a classic shoot 'em up scroller game, where you must fight against tons of bad dudes.
+The game offers high speed action, with massive destruction and lots of fun.
+Kraptor features a powerful engine for 2D shooter scroller games.
+Massive destruction, powerful weapons, all that you always wanted in this kind of games!
+It is also multi-platform (DOS, Win32, Linux and more!)
+
+---------------------------------------------------------------------
+
+Command line options
+
+-safe              Will run the game in 'safe' mode (will try to start it no matter what)
+-windowscreen      Will run the game in a window (not available in DOS version)
+-fullscreen        Will run the game in fullscreen
+-autoscreen        Will try to autodetect video card and screen mode
+-nosound           Disables the sound
+-320x200           Video mode 320x200
+-320x240           Video mode 320x240
+-640x480           Video mode 640x480
+-800x600           Video mode 800x600
+-1024x768          Video mode 1024x768
+
+---------------------------------------------------------------------
+
+Features
+
+Some of the main features of the engine and the game itself:
+
+# FULL SOURCE CODE AVAILABLE FREE (Under MIT license)
+# Works on many platforms, including DOS, Windows and Linux!
+# Supports all resolutions, like 320x200, 640x480, 1024x768, etc.; even those bizarre ones, like 160x120, 320x400, etc.
+# Uses stereo positional sound (you hear the ships flying around you)
+# Has a incredible particle system, that let all sorts of particle effects in the explosions, fire on the ground, the ships going down in flames,and the weapons can let a trail of smoke, beams, etc
+# Has a dynamic fire, smoke and explosions system based on layers and on-fly rendering, that let show a massive destruction effect on the air and ground.
+# Has a dynamic enviroment sub-engine to render rain, snow, etc.
+# The ships explodes into pieces, and the builds on the ground blows up in a chain-explosion effect.
+# Enemys of any size, and custom IAs and weapons.
+# All kind of animated bad dudes, from tiny ones to big bad bosses.
+# All the flying objects cast shadows over the background, with perspective correction.
+# Support for animations and cinematic, with sound and subtitles.
+# A on-fly translation system with UNICODE and UTF-8 support, that can translate on the fly all the GUIs to other language.
+# Multiple weapons for player and enemies.
+# Has original music sound-track.
+# You can lower/raise the detail level, in low detail, the game runs good even on a 486 DX2!
+# Original story, with cool movies.
+# Realistic huge hi-res backgrounds levels.
+# Original high quality stereo sounds and music
+# Support for Spanish and English translation on-fly
+# 'Black market' shop to buy new weapons, upgrade ship, etc.
+# GUI driven interface like the one used in Unre*l.
+# You can Save / Load your game
+
+---------------------------------------------------------------------
+
+Thanks to:
+
+# All the people that made open source and free software. Without them, the world would be yet more scary.
+# The guys of Allegro, DUMB, Pixelate and Allegro.cc. Cool job!
+# F3N1X Team, thanks for the Linux CDs!
+# Mother, thanks for the Linux T-Shirt and the new Linux CDs! Ha! Of course, thanks for live!
+# Father, thanks for so many things... specially my first 386. What cool machine it was!
+# Iron Chelo "The Bodyguard"
+# DJ Ñanga
+# GAC
+# J. Monytor (no man, we need more acceleration to put that tea cup in orbit of mars)
+# El Super 666, cool heavy metal CDs... thanks!
+# El Mago Eddy
+# Error Catastrofico
+# Gabriel, thanks for lots of good heavy MP3s
+# B. Gates, hope that you recover soon from your lobotomy...
+# G. W. Bush, call me when you be more sober...
+
+---------------------------------------------------------------------
+
+Software used in development
+
+The following software was used in the development of Kraptor
+For links to download them, check the "Links" section.
+
+GNU GCC, DJGPP and MinGW32 where the main compilers used in Kraptor
+Allegro is the game programming library used.
+DUMB is the music engine.
+Linux Mandrake 8.2 and 9.0 where used as the main OS for development.
+The GIMP and ASE where used to do the 2D graphic artwork and FLI cinematic.
+Blender, Povray, Giram, Ayam and Aqsis where used to do the 3D artwork.
+PMASK is the collision library made by "orz".
+Bluefish and Mozilla where used to make this web page.
+Bochs, a portable x86 Emulator, really useful for testing in other OS without reboot.
+Audacity, a cool free audio editor!
+DLG, a dialog editor by Julien Cugniere (thanks for the GUI routines too!)
+UPX was used to compress the executable in certaing platforms.
+Many other software that I don't remember right now was used also. Thanks to them too.
+Hardware used in development
+The main development machine was a P3 450 MHz (over-clocked at 500 MHz), 320MB RAM, 2 x 40GB HD, CD, CD-RW, optical pen, scanner, web-cam, etc, with Linux Mandrake 9.0, Free-DOS and Windoze 98
+One AMD Atlhon XP 1700 with 512MB RAM, NVIDIA GForce2 MX 400, dual 80 GB HD was used to the rendering and advanced graphic and sound edition.
+Also was used a 486DX2 66MHz, 8MB RAM, 540MB HD, 5 1/4 floppy, with DR-DOS for performance testing purposes.
+A Palm m125 was used to take ideas and notes 'on-fly' in the streets.
+
+---------------------------------------------------------------------
+
+Released under the MIT license
+The MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sub-license, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---------------------------------------------------------------------
+
+

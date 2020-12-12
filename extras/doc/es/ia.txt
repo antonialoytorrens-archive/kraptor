@@ -1,0 +1,78 @@
+Kraptor - Sistema de Inteligencia Artificial
+
+
+Por Kronoman
+En memoria de mi querido padre.
+
+--------------------------------------------------------------------------
+Este documento describe como funciona el sistema de inteligencia artificial.
+
+
+Espacio fisico en disco:
+
+Los archivos de IA son _objetos binarios_ (DAT_BINARY) 
+con la propiedad tipo "IA" (mayusculas), guardados en el archivo de "grabber", "ia.dat", 
+usando compresion _individual_ de objetos.
+Recomiendo que cada objeto tenga el prefijo ia_[nombre]
+y que su nombre no supere los 256 caracteres, ya que sera la ID
+para identificarlo al cargar las clases de enemigos.
+Ejemplo: ia_agresiva, ia_simple, etc...
+
+--------------------------------------------------------------------------
+Mantenimiento en RAM:
+
+Al principio del juego, se carga el archivo krap_ia.dat,
+y entonces, se crea un cache donde van todas los scripts,
+ya traducidos de binario al formato de la plataforma.
+Todo esto se hace con memoria dinamica y listas enlazadas.
+Luego, cada vez que se carga una clase de enemigo,
+se le asigna un puntero a la IA correspondiente en la lista 
+enlazada previamente cargada.
+
+Es decir:
+- cargar krap_ia.dat
+- copiar y traducir los scripts a una nueva lista
+- descargar krap_ia.dat
+- cargar clase de enemigos, y para cada clase, asignarle
+  el puntero a la IA asignada.
+
+--------------------------------------------------------------------------
+Del lenguaje de scripting:
+
+Las instrucciones se escriben en un archivo de texto plano, 
+luego se pasan por el compilador, el cual las convierte 
+a un fichero semi-binario (es un archivo de texto con formato simple), 
+el cual es agregado usando "grabber" al archivo krap_ia.dat
+Lo interesante es que el "lenguaje" para el script 
+contiene UNA sola instruccion, ya que es muy especializada
+para el manejo de los enemigos, la cual contiene
+el movimiento por ciclo del enemigo (30 ciclos = 1 segundo).
+
+NOTA: el "compilador" es extremadamente BASICO, por lo tanto
+      NO EXISTEN COMENTARIOS, NO PONER ESPACIOS EXTRA, 
+      NI NADA "RARO"; SOLO PONER LAS LINEAS CON LA SINTAXIS
+      ESPECIFICADA!
+
+La sintaxis para el codigo de texto plano es la siguiente:
+[x1],[x2],[y1],[y2],[weapon],[loop]
+
+Donde:
+[x1],[x2] son rangos de movimiento en X para el enemigo
+          por ejemplo, 1,2 indica un movimiento entre +1 y +2
+          -5, 5 indica un movimiento entre -5 y +5 (-4,-3...0,1,etc)             
+[y1],[y2] funcionan igual a [x1],[x2], pero en el eje Y
+[weapon] indica que el enemigo debe disparar ese numero de clase de arma.
+         un valor de -1 indica NO disparar.
+
+[loop] indica la cantidad de veces que se debe repetir esta accion
+       la duracion de cada instruccion es 1/30 de segundo, asique
+       un valor de 30, repetira la accion 1 segundo completo.
+       
+Luego, el texto plano se pasa por un compilador, el cual
+interpreta la secuencia y la salva a disco en un archivo semi-binario.
+El archivo semi-binario tiene el formato de texto ASCII, donde
+se colocan los numeros separados por comas, todos en una sola linea larga,
+lo que permite parsearlo en tiempo de ejecucion facilmente.
+ej:
+1,2,3,4,5,6,7,8,9,0,1,2 [...]
+--------------------------------------------------------------------------

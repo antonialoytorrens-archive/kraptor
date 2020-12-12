@@ -1,0 +1,30 @@
+Kraptor
+-------
+Por Kronoman - Agosto 2002 - En memoria de mi querido padre
+
+Engine de juego de aviones/naves
+Licencia GNU GPL
+Hecho en C, con Allegro y DUMB
+
+Soporte de diferentes teclados de Kraptor
+-----------------------------------------
+Incluir el archivo keyboard.dat que trae Allegro. :^)
+
+Modo de soporte de multiples lenguajes de Kraptor
+--------------------------------------------------
+
+Kraptor soporta multiples lenguajes gracias a las facilidades de Allegro.
+El archivo language.dat debe estar presente (viene con Allegro)
+y cada objeto interno debe contener los textos adecuados para cada idioma.
+El idioma de base es el ingles, asique, los textos en el codigo fuente
+deben estar en ingles.
+La GUI esta dise~ada para auto-traducirse 'al vuelo', es decir,
+cada vez que se dibuja, busca el nuevo lenguaje.
+
+El archivo kraptor.cfg debe contener
+
+[system]
+language = es
+
+Donde language puede ser: es, en, etc (es decir, el codigo de 2 letras
+del lenguaje a usar).

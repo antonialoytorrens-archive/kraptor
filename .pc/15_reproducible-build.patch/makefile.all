@@ -1,0 +1,46 @@
+# Makefile generic - Rules to build
+# Fixed at last! :), thanks to Schwarzung
+
+TEMP = $(wildcard $(SRCDIR)/*$(SRCSUF))
+FILES = $(if $(TEMP), $(TEMP), $(error No source code found!))
+OBJS = $(addprefix $(OBJDIR)/,$(addsuffix $(OBJSUF), $(basename $(notdir $(FILES) ) ) ) )
+
+# main target, all project
+.PHONY: all
+all: $(BINDIR)/$(BINARY)$(BINSUF)
+
+$(BINDIR)/$(BINARY)$(BINSUF) : $(OBJS) 
+	$(GCC) $^ -o $@ $(LFLAGS)
+	@echo The $(BINDIR)/$(BINARY)$(BINSUF) is ready!
+
+$(OBJDIR)/%$(OBJSUF) : $(SRCDIR)/%$(SRCSUF)
+	$(GCC) $(CFLAGS) -c $< -o $@
+
+.PHONY: clean and also clean the test
+clean: cleantest
+	rm -rf $(BINDIR)/$(BINARY)$(BINSUF) $(OBJS)
+
+# Strip symbols and compress with upx packer (http://upx.sf.net/)
+.PHONY: upx
+upx:
+	strip --strip-all $(BINDIR)/$(BINARY)$(BINSUF)
+	upx --best $(BINDIR)/$(BINARY)$(BINSUF)
+
+# Install - Please add here your custom installation functions
+.PHONY: install
+install:
+	@echo Sorry, the install feature is not done yet.
+
+# Test if the system can compile - PLEASE MODIFY THIS TO SUIT YOUR NEEDS!
+# Compile the program
+# The test.run is to check if make run or not in DJGPP enviroment (ugly hack)
+# seems that DOS don't set errorlevel if fails to execute a program
+.PHONY: test
+test:
+	$(GCC) $(TESTFILE)$(SRCSUF) -o $(TESTFILE)$(BINSUF) $(CFLAGS) $(LFLAGS)
+	echo "don't edit me" > test.run
+
+# Cleans the test
+.PHONY: cleantest
+cleantest: 
+	rm -rf $(TESTFILE)$(BINSUF) test.run

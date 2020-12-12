@@ -1,0 +1,12 @@
+Aqui va el compilador de IA de Kraptor
+Ver ia.txt para mas info.
+
+Uso:
+parse_ia [entrada.txt]  [salida.ia]
+
+Sintaxis de entrada.txt:
+[x1],[x2],[y1],[y2],[weapon],[loop]
+
+Por Kronoman
+En memoria de mi querido padre.
+Copyright (c) 2003, Kronoman

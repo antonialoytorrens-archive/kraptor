@@ -1,0 +1,457 @@
+Kraptor
+-------
+Por Kronoman - 
+Comenzado en Agosto 2002
+En memoria de mi querido padre
+
+Engine de juego de aviones/naves
+Hecho en C, con Allegro y DUMB
+
+Kraptor: especificaciones tecnicas
+----------------------------------
+
+Fondos:
+600x4000 [grilla de 40x40]
+Matriz de 15x100 indica si explota o no el fondo, un numero > 0 indica
+que esa area es explosiva, al tocar un disparo esa area, descuenta del mapa
+y finalmente explota, junto con los adyacentes.
+
+Matriz de 15x100 tiene un numero, > 0 indica que debe aparecer un enemigo
+de esa clase-1, 0 = neutro. O sea, por ejemplo: el numero 1 indica que
+debe aparecer un enemigo de clase 0, 2 de clase 1, etc (o sea, n-1, siendo 0 neutro)
+
+NOTA: usar siempre compresion individual de objetos en los datos, no global,
+      ya que ralentiza mucho el tiempo de carga.
+
+Archivos DATAFILES:
+-------------------------------------------------------
+
+Datos principales del programa
+--> krapmain.dat
+
+    Contiene los datos principales del juego, tales como enemigos,
+    jugador, armamento, sonido, pirotecnia, premios y secuencia de niveles.
+    Ademas, debe contener los datos opcionales mencioados
+    en los scripts (tales como sprites, sonidos, etc).
+    NO contiene los archivos de cada nivel independiente.
+
+    Contenido:
+    =========
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    Objetos sueltos necesarios:
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    hud_font
+
+        Font para dibujar el 'hud', es decir la informacion
+        de puntaje y cantidad de balas.
+        Si no existe, se usa el font de la BIOS
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    pal_game
+
+        Paleta de 256 colores usada durante TODO el juego
+        Los enemigos, explosiones, particulas, fondos, etc DEBEN ajustarse
+        a esta paleta. Esto NO afecta las cinematicas o los menues.
+        SI afecta a la imagen de fondo del shopping
+        RESPETAR LAS MINUSCULAS EN EL NOMBRE, pal_game!
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    shop_bmp
+
+        Imagen de fondo del shopping
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    burn_0
+    burn_1
+    burn_2
+        Sprites de 40x40 para quemar el fondo.
+        Deben representar un hoyo de quemazon, en escala de grises
+        inversa, el color negro sera transparente, y los tonos
+        de blanco indican profundidad de quemado, siendo 255,255,255(RGB)
+        el mas profundo.
+        Deben estar hechos para poder ser rotados arbitrariamente
+        al azar (para dar mas variedad)
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    humo
+        Sprite de unos 100x100 que sera usado para generar el efecto de humo.
+        Esto es _opcional_, ya que todavia no funciona muy bien el efecto.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    explo_bmp_0
+    explo_bmp_1
+    explo_bmp_2
+    
+        Sprites de explosiones, todas del MISMO tama~o, usadas para renderear
+        explosiones.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    explo_snd_0
+    explo_snd_1
+    explo_snd_2
+
+        Sonido de explosiones.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    chispa_0
+    chispa_1
+    chispa_2
+
+        Chispas que las naves arrojan al explotar (bolitas de fuego peque~as).
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    gamescript
+
+        Objeto de texto que contiene un script que indica la sucesion de niveles
+        del juego de manera descriptiva como un archivo de configuracion de Allegro
+        Se van leyendo las secciones [NIVEL_x] hasta que no se encuentra la proxima,
+        con lo cual se asume que el juego termino (el jugador gano).
+        Las cinematicas se pueden suprimir colocando valor `null` (sin las `)
+
+
+        La seccion [GAME_INTRO] contiene la cinematica cuando el jugador inicia un juego nuevo.
+        La seccion [GAME_OVER] contiene la cinematica cuando el jugador pierde.
+
+        Comienza a contar de nivel 1
+        Todo lo que tiene # es comentario
+
+    Ejemplo (script de 2 niveles):
+
+        [GAME_INTRO]
+        cine = intro.dat
+
+        [GAME_OVER]
+        cine = gameover.dat
+
+        [NIVEL_1]
+        # Titulo del nivel
+        titulo = Primera Batalla
+    
+        # Explicacion, hasta 256 caracteres, usa word-wrap
+        texto = Te aproximas al primer combate, buena suerte!
+    
+        # Cinematica de comienzo de nivel
+        cine_in = intro01.dat
+    
+        # Esto especifica el nivel conteniendo datos de juego
+        level_dat = level1.dat
+    
+        # Cinematica de fin de nivel
+        cine_out = null
+
+        # Referente al efecto climatico, es opcional
+        # densidad del clima en particulas 0..300
+        clima_c = 100
+        # tipo de clima: 0 = lluvia, 1 = nieve
+        clima_t = 0
+        # direccion de caida: 0 = izq, 1 = der
+        clima_d = 0
+
+        [NIVEL_2]
+        # Titulo del nivel
+        titulo = Final
+    
+        # Explicacion, hasta 256 caracteres, usa word-wrap
+        texto = Este es el final, mi unico amigo!
+    
+        # Cinematica de comienzo de nivel
+        cine_in = null
+    
+        # Esto especifica el nivel conteniendo datos de juego
+        level_dat = level1.dat
+    
+        # Cinematica de fin de nivel
+        cine_out = fin.dat
+    
+        # Al buscar el 3er nivel, el juego finaliza, y va a la tabla de puntos.
+
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    jugador
+           
+    Esto contiene una definicion de los sprites, armas y sonidos del jugador
+    Ejemplo:
+
+    # Configuracion del jugador
+    [JUGADOR]
+    # Sprites del jugador izq,med,der
+    # DEBEN ser del MISMO tama~o y contenidos en este mismo archivo DAT
+    spr_0 = jugador_0
+    spr_1 = jugador_1
+    spr_2 = jugador_2
+
+    # dinero inicial con que cuenta al comenzar a jugar
+    init_money = 500
+
+    # bombas iniciales con que cuenta al comenzar a jugar
+    init_bombas = 1
+
+    # Referente a la reparacion de la nave en el shopping
+    [JUGADOR_REPARAR]
+    # Cantidad de unidades que da cada reparacion
+    cantidad = 10
+    # Precio cada reparacion de la nave 
+    precio = 100
+    # Descripcion
+    desc = Reparar el 10% de los desperfectos de la nave
+    # Bitmap que representa la reparacion, de 116x124 preferentemente (se estirara)
+    bmp = bitmap_reparar
+
+    # Referente a la bomba especial de la nave en el shopping
+    [JUGADOR_BOMBA_ESPECIAL]
+    # cantidad de bombas de cada compra
+    cantidad = 1
+    # precio de cada item de bomba especial
+    precio = 100
+    # descripcion
+    desc = Bomba de pulso de energia
+    # Bitmap que representa en el shopping,  de 116x124
+    bmp = bitmap_bomba
+    # sonido de lanzamiento de la bomba (OJO, cuando explota, toca sonido de explosion; esto deberia ser un speech, tipo "bomb fire" o algo asi!)
+    bomba_sonido = speech_bomb_fire
+
+    # cantidad maxima que se puede comprar
+    max_ammo = 5
+
+    # Armamento disponible para el jugador (el arma 0 esta siempre y nunca se acaba)
+    # Va de ARMA_0 hasta  ARMA_x [x es un numero]
+    [ARMA_0]
+    # Referente al modo 'shopping' del arma
+    # bitmap de 116x124 preferentemente (se estirara)
+    arma = dibujo_del_arma_en_el_shop_bitmap
+    # descripcion del arma para el shop: maximo 2048 caracteres
+    desc = Descripcion del arma
+    # descripcion corta para el HUD del juego: max 20 caracteres
+    desc_short = Wpn #0
+    # precio, cuidar que sea relativo a lo que 'gana' el jugador
+    precio = 12345
+    # cantidad de 'balas' por paquete de compra
+    cant_ammo = 100
+    # cantidad maxima de 'balas'
+    cant_ammo_max = 999
+
+    # Referente al disparo del arma en si
+    spr = sprite_del_disparo
+    snd_0 = sonido_al_disparar_o_null
+    snd_1 = sonido_al_impactar_o_null
+    vx = 0
+    vy = -0.5
+    vida = 480
+    punch = 3
+    firerate = 100
+    t = 0
+
+    # Estela del disparo, esto es opcional (si no aparece, no abra estela)
+    # Vida
+        est_vida_min = 1
+        est_vida_max = 10
+    # Cantidad
+        est_cant_min = 5
+        est_cant_max = 10
+    # color RGB
+        est_color_r_min = 128
+        est_color_r_max = 255
+        est_color_g_min = 0
+        est_color_g_max = 0
+        est_color_b_min = 0
+        est_color_b_max = 0
+    # escala aceleracion: 100 = 0.01 
+        est_dx_min = -100
+        est_dx_max = 100
+        est_dy_min = 100
+        est_dy_max = 300
+    # tipo de particula
+        est_tipo_min = 3
+        est_tipo_max = 3
+    # radio de la particula (si es aplicable)
+	est_rad_min = 1
+	est_rad_max = 3
+    # usar transparencia? (-1 = si, 0 = no)
+	est_transp = 0
+
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    enemigos
+
+    Esto contiene una definicion de los enemigos asi como de sus
+    tipos de armamento, y la IA que utilizan (Ver ia.txt).
+    Ejemplo:
+
+    # clases de enemigos
+    [ENEMIGO_0]
+    # vida enemigo
+    vida = 100
+    # peso del enemigo (sirve para proporcion de explosion e impacto de colision)
+    peso = 50
+
+    # string de ID de programa en bytecodes de IA (ver ia.txt)
+    tipo_ia = ia_1
+    # la IA debe comenzar en un punto arbitrario del bytecode (al azar = -1, default: 0 = no)
+    ia_azar = 0
+
+    # este flag indica que el enemigo es un BOSS, de esa manera, el enemigo
+    # no se va NUNCA hacia abajo de 1/2  de pantalla (como hacen los boss)
+    # (default 0 = no;  -1 = si)
+    ia_boss = 0
+
+    # sprites de animacion,
+    # se pueden obviar; hay un maximo de 4 (0..3)
+    # si utiliza uno solo, se puede poner spr = dibujo y listo
+    spr_0 = enemigo0_0
+    spr_1 = enemigo0_1
+    spr_2 = enemigo0_2
+    spr_3 = enemigo0_3
+
+    # delay de animacion de los sprites (30 = 1 segundo)
+    spr_delay = 10
+
+    # dinero que paga matar a este enemigo
+    dinero = 50
+
+    # premio (indice del premio) que suelta este enemigo (-1 = ninguno)
+    premio_idx = 1
+    # probabilidad de soltar el premio al morir (0..100 %)
+    premio_prob = 95
+
+    # clases de armas
+    [ARMA_0]
+    # dibujo del disparo
+    spr = laser2
+    # sonido al disparar
+    snd_0 = sonido_al_disparar_o_null
+    # sonido al impactar
+    snd_1 = sonido_al_impactar_o_null
+    # velocidad x
+    vx = 0
+    # velocidad y
+    vy = 2
+    # duracion del disparo en tics (30 = 1 segundo)
+    vida = 400
+    # golpe del disparo
+    punch = 20
+    # tipo de arma
+    t = 2
+
+    # Estela del disparo, esto es opcional (si no aparece, no abra estela)
+    # Vida
+        est_vida_min = 1
+        est_vida_max = 10
+    # Cantidad
+        est_cant_min = 5
+        est_cant_max = 10
+    # color RGB
+        est_color_r_min = 128
+        est_color_r_max = 255
+        est_color_g_min = 0
+        est_color_g_max = 0
+        est_color_b_min = 0
+        est_color_b_max = 0
+    # ( escala aceleracion: 100 = 0.01)
+        est_dx_min = -100
+        est_dx_max = 100
+        est_dy_min = 100
+        est_dy_max = 300
+    # tipo de particula
+        est_tipo_min = 3
+        est_tipo_max = 3
+    # radio de la particula (si es aplicable)
+	est_rad_min = 1
+	est_rad_max = 3
+    # usar transparencia? (-1 = si, 0 = no)
+	est_transp = 0
+
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    premios
+
+    Este script configura los premios.
+    Ver el archivo premio.txt para mas informacion.
+
+    -------------------------------------------------------------------------
+Menues:
+Nota: los archivos de texto para presentar en pantalla 
+      (ej: help, about) deben estar codificados en UTF-8
+      para ello, usar el utilitario de Allegro "textconv.exe"
+
+--> krapmnu.dat:
+
+    Esto contiene el fondo del menu y otros items utiles.
+
+    main_menu_bmp     <- bitmap de 640x480 que es el fondo del menu
+    main_menu_pal     <- paleta de 256 colores del menu
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    help_txt
+
+        Es un archivo de texto guardado tal cual (modo binario)
+        para mostrar en el menu Ayuda / Ayuda...
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    about_txt
+
+        Es un archivo de texto guardado tal cual (modo binario)
+        para mostrar en el menu Ayuda / Acerca de...
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    about_bmp
+
+        Es una imagen de tipo BITMAP, que se mostrara en Ayuda / Acerca de...
+        ajustarse a main_menu_pal!
+        Tama~o:  144x168 pixels!
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+    -------------------------------------------------------------------------
+
+Niveles:
+--> level*.dat:
+
+    Esto contiene el fondo (bitmap) y su correspondiente matrices de mapas
+    para los diferentes niveles de dificultad.
+    Se van cargando dinamicamente a medida que avanza el juego.
+
+    Contenido:
+    =========
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    mapa_fondo
+
+        Esto es la imagen del juego, de  600x4000 pixels.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    mapa_g
+
+        Informacion binaria (matriz) con los sectores explosivos del mapa.
+        0 indica sector no explosivo, > 0 indica energia de ese sector,
+        al llegar a 0, explota y queda 'quemada' el area.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    enem_g   -> opcional, dificultad unica
+    enem_g_0 -> dificultad FACIL
+    enem_g_1 -> dificultad MEDIA
+    enem_g_2 -> dificultad DIFICIL
+
+        Informacion binaria (matriz) con las posiciones de aparicion de enemigos.
+        Contiene 0 donde no aparecen enemigo, > 0 donde aparecen enemigos.
+        El numero indica el indice de clase de enemigo a aparecer, y se le
+        restara 1, asique enemigo 1 en enem_g representa ENEMIGO_0 en
+        las clases de enemigos.
+        Nota, el engine busca el enem_g_[dificultad]
+        Si no existe, intenta obtener enem_g, y si no existe, aborta el programa.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    musica
+
+        Musica IT, XM o S3M, opcional, se escucha de fondo durante el nivel. :^P
+        En formato IT, XM o S3M, para mas info, ver la documentacion de DUMB
+        (como cargar musica desde un DAT)
+        Debe ser un objeto binario de tipo "IT  ", "XM  " o "S3M "
+        Los espacios adicionales no son necesarios, el grabber los pone solo.
+        La musica debe durar aproximadamente 133 segundos (2 mins 13 segs)
+        porque es lo que dura un nivel aproximadamente (4000/30 pixels x segundo)
+    -------------------------------------------------------------------------
+Cinematicas:
+--> cine*.dat
+
+    Esto contiene las cinematicas del juego, se cargan dinamicamente a
+    medida que se necesitan.
+
+    NOTA: el 'lenguaje' usado en el script de cinematicas esta explicado
+          en el archivo cinemati.txt!!
+
+    Contenido:
+    =========
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    El unico contenido obligatorio es el objeto de texto (TXT)
+    llamado 'guion_txt' que contiene los comandos
+    especificados en cinemati.txt para poder mover la cinematica
+    NOTA: se buscara el guion acorde al lenguaje actual primero,
+    por ejemplo, si es espa~ol, se buscara guion_txt_es primero,
+    y si no existe, se usara guion_txt, y si no existe,
+    se intentara cargar guion_txt_en, y si no existe, se ignorara
+    la animacion.
+    O sea, para internacionalizar el juego, crear un guion_txt_es (espa~ol)
+    y un guion_txt_en (ingles) y los demas que sean necesarios.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    -------------------------------------------------------------------------

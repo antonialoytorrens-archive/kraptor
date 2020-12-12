@@ -1,0 +1,6 @@
+Shader
+
+
+Programa utilitario de ayuda para generar las sombras
+de los edificios de los mapas de Kraptor.
+

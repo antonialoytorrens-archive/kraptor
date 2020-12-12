@@ -1,0 +1,16 @@
+01_makefile.patch
+02_mask_bits.patch
+03_static_menu.patch
+04_static_joymnu.patch
+05_static_game.patch
+06_default_font.patch
+07_directories.patch
+08_home.patch
+09_start-in-windowed-mode.patch
+10_fix-Werror-format-security-error.patch
+11_fix-spelling-error-in-binary.patch
+12_save-games-in-home.patch
+13_save-bitmaps-in-home.patch
+14_create-hidden-kraptor-directory-in-home.patch
+15_reproducible-build.patch
+fix_building_kraptor_with_fix_functions.patch

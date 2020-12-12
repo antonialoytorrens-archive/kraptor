@@ -1,0 +1,39 @@
+Premios del juego
+-----------------
+
+Los premios que sueltan los enemigos estan definidos en un script
+de texto "premios" contenido en el archivo krapmain.dat
+
+
+El archivo tiene este formato:
+
+[PREMIO_n]
+premiar = [indice del objeto que premia tomar este premio, ver mas abajo]
+cantidad = [cantidad que da tomar ese premio]
+sprite = [imagen que lo representa (sprite) ]
+vida = [vida del premio antes de desaparecer si el jugador no lo agarra]
+sonido = [sonido al tomarlo ]
+
+Explicacion
+-----------
+
+[PREMIO_n] indica el indice del premio, como sera referenciado en
+el campo premio_idx del script de enemigos.
+Va de 0..[ver codigo fuente]
+
+"premiar" es un indice que va desde -2 a [max armas jugador]
+siendo:
+-2 = premiar con bombas extra
+-1 = premiar con energia extra
+0 en adelante = premiar con armamento correspondiente a ese indice (MAX_ARM_CLASS en jugador.h)
+
+"cantidad" es la cantidad de premio que se le dara;
+por ejemplo, si es 5 y premiar es -1, se le sumaran 5 puntos de energia
+al jugador.
+
+"sprite" es el nombre del bitmap que lo representa, debe estar contenido
+en krapmain.dat.
+
+"vida" es la duracion del premio antes de desaparecer de escena (30 = 1 segundo)
+
+"sonido" es un sample que se tocara cuando se junte el premio

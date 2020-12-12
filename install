@@ -1,0 +1,38 @@
+Kraptor
+-------
+
+Instructions for compilation of the engine from source code.
+
+Before compiling, check that:
+(*) You have all compiler tools installed (gcc,make,etc)
+(*) You have Allegro library properly installed (http://alleg.sf.net/)
+(*) You have DUMB Music library properly installed (http://dumb.sf.net/)
+
+
+The engine was tested and can be compiled with GNU GCC (Linux), MinGW (Windows), DJGPP (DOS)
+It may be able to compile with other compilers too.
+
+-- DJGPP users:
+
+Type:
+
+	fix.bat djgpp
+	fix.bat test
+	make
+
+-- Mingw users:
+
+Type:
+
+	fix.bat mingw
+	fix.bat test
+	make
+
+
+-- Linux users:
+
+Type:
+
+	./fix.sh linux
+	./fix.sh test
+	make

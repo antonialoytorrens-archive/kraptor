@@ -1,0 +1,213 @@
+Engine de cinematicas mediante scripting y bitmaps y animaciones
+Por Kronoman
+En memoria de mi querido padre
+Copyright (c) Septiembre de 2002
+---------------------------------------------------------------------
+Algunas ideas:
+
+El texto del script es leido desde un campo ->dat de un objeto
+DATAFILE de Allegro.
+Se lee como una cadena de chars, donde cada linea termina con un
+caracter 10 (LF, guarda compatibilidad con archivos de Linux!)
+Se va interpretando linea a linea.
+Por cada linea obtenida, se separa en parametros, y luego, el 1er parametro
+es tomado y se llama a la funcion que lo interpreta.
+Para listar las funciones se tiene una estructura con la instruccion (char)
+y el puntero a la funcion que la interpreta.
+Se busca en esta lista la instruccion ingresada.
+La funcion devuelve 0 si OK, -1 en falla.
+La funcion no recibe parametros. Los parametros de la linea estan
+almacenados en matrices globales.
+Son 3 matrices globales que contienen diferentes interpretaciones
+de los parametros.
+1) Parametros interpretados como enteros int
+2) Parametros interpretados como strings de char
+3) Todo lo que quedo despues de la primera instruccion (linea completa
+   sin 1era instruccion)
+Ademas, cada matriz contiene la cantidad de parametros interpretados,
+para poder comprobar si el usuario se olvido algun parametro.
+---------------------------------------------------------------------
+Multimedia:
+
+Las animaciones son archivos FLIC (fli/flc), y el texto subtitulado
+sincronizado va en un objeto aparte sincronizado con los frames del FLIC
+Las imagenes fijas son bitmaps
+Los sonidos son samples
+La musica es MOD (para DUMB) 
+La musica por AHORA NO ESTA IMPLEMENTADA, POR COMPLICACIONES CON EL 
+poll que precisa la musica en DUMB!!!
+---------------------------------------------------------------------
+Bitmap de buffer:
+
+El engine dibuja a un bitmap de buffer de 640x480, donde luego
+es enviado a pantalla cuando esta listo [ajustando la proporcion
+a la resolucion de pantalla].
+---------------------------------------------------------------------
+Sintaxis:
+
+TODAS LAS INSTRUCCIONES Y PARAMETROS DEBEN IR SEPARADOS POR UN (1) ESPACIO!
+EL ENGINE ES SENSIBLE A MAYUSCULAS/MINUSCULAS
+Todo lo que comienze con # es comentario y esa linea es IGNORADA.
+Las instrucciones son del tipo 
+    [instruccion] [parametro] [parametro] [etc]
+NOTAR el espacio entre [parametro] y [parametro], etc...
+---------------------------------------------------------------------
+Juego de instrucciones para el script principal:
+El script principal indica la secuencia de eventos que deben producirse,
+es decir, que animaciones reproducir, que sonidos tocar, etc.
+NOTAR que los parametros NO son opcionales, olvidarselos puede ocurrir
+en resultados IMPREDECIBLES! (no hay comprobacion de errores...)
+
+# comentario
+   Toda linea que comienze con # es IGNORADA (se considera un comentario)
+   OK
+   
+cls [r] [g] [b]
+    Limpia la pantalla a color [r] [g] [b] (color RGB 0..255 c/u)
+    OK
+
+fade_out [velocidad]
+   Realiza una transicion a color negro 
+   [velocidad] 1..64 (lento-rapido)
+   OK
+
+fade_out_color [r] [g] [b] [velocidad]
+   Realiza una transicion al color [r] [g] [b]
+   [velocidad] 1..64 (lento-rapido)
+   OK
+    
+rect [x] [y] [x2] [y2] [r] [g] [b]
+   Dibuja un rectangulo desde [x] [y] a [x2] [y2]
+   [r] [g] [b] es el color, en valores RGB 0..255
+   OK
+    
+rectfill [x] [y] [x2] [y2] [r] [g] [b]
+   Dibuja un rectangulo LLENO desde [x] [y] a [x2] [y2]
+   [r] [g] [b] es el color, en valores RGB 0..255
+   OK
+    
+line [x] [y] [x2] [y2] [r] [g] [b]
+   Dibuja una linea desde [x] [y] a [x2] [y2]
+   [r] [g] [b] es el color, en valores RGB 0..255
+   OK
+    
+locate [x] [y] [w]
+    Posiciona la salida de texto en [x] [y] con ancho [w]
+    Setea el borde [w] como 'filo' o 'borde' para las salidas de texto (echo)
+    Al llegar el texto a esa posicion, hace word-wrap
+    OK
+    
+text_color [r] [g] [b]
+   Setea el color del texto a colocar en futuras llamadas
+   [r] [g] [b] es el color, en valores RGB 0..255
+   OK
+   
+text_back [r] [g] [b]
+   Setea el color del FONDO del  texto a colocar en futuras llamadas
+   [r] [g] [b] es el color, en valores RGB 0..255
+   Si algun  [r] [g] [b] es < 0 (ej: -1) el fondo del texto es transparente
+   OK
+
+text_font [font]
+   Cambia la fuente de las salidas de echo; si no se pone [font],
+   se volvera al font original de la BIOS.
+   [font] debe ser un objeto de tipo 'font' contenido en el archivo
+   de la cinematica.
+   OK
+
+echo [texto]
+    Escribe el [texto] en pantalla, con word-wrap al borde seteado
+    Desplaza la coordenada [y] hacia abajo y [x] al origen anterior (salto de linea)
+    OK
+
+echo_centre_x [texto]
+    Escribe el [texto] centrado en [x] en pantalla, con word-wrap al borde seteado
+    Desplaza la coordenada [y] hacia abajo y [x] al origen anterior (salto de linea)
+    OK
+
+echo_centre_xy [texto]
+    Escribe el [texto] centrado en [x] e [y] en pantalla, con word-wrap al borde seteado
+    Desplaza la coordenada [y] hacia abajo y [x] al origen anterior (salto de linea)
+    OK
+
+rest [milisegundos]
+     Espera [milisegundos] antes de continuar la interpretacion...
+     Si [milisegundos] <= 0, espera por una tecla...
+     OK
+     
+set_palette [paleta_256_colores]
+   Setea la paleta de colores actual al objeto PALETA [paleta_256_colores]
+   Esto es lento, porque ademas, calcula la tabla RGB para la paleta
+   OK
+
+set_palette_default
+   Setea la paleta default de la placa VGA
+   OK
+   
+blit [x] [y] [bitmap]
+   Coloca el [bitmap] en [x] [y]
+   OK
+   
+sprite [x] [y] [sprite]
+   Coloca el [sprite] en [x] [y] filtrando el color de mascara
+   OK
+   
+stretch_blit [x] [y] [w] [h] [bitmap]
+   Coloca el [bitmap] en [x] [y] estirandolo a ancho [w] y alto [h]
+   OK
+
+play_sample [sample] [vol] [pan] [freq]
+    Lanza un sonido con el volumen, paneo y frecuencia. 
+    El volumen y paneo van desde 0 (min/izq) hasta 255 (max/derecho), 
+    127 es la mitad del parlante. 
+    Frecuencia es relativa mas que absoluta: 1000 representa la frecuencia a la que 
+    el sonido fue grabado, 2000 es el doble, 3000 el triple, 500 la mitad, etc   
+    OK
+
+clear_fli_back [r] [g] [b]
+	Esto es una 'bandera' que permite que cuando se ejecute un FLI,
+	antes de mostrar el primero cuadro, se limpie a color [r] [g] [b]
+	Coloque [r] [g] [b] = -1 para que no se limpie la pantalla
+	El default es limpiar a negro...
+    OK
+
+keyboard_cancel_fli [valor]
+	Esto permite que el usuario cancele una animacion fli al apretar una tecla
+	El default es 0 [NO]
+	Cualquier valor <> que 0, indica que si. (Usar -1 por las dudas)
+    OK
+
+play_fli [x] [y] [w] [h] [loop] [objeto_fli] [script_fli]
+    Ejecuta una animacion FLI contenida en el DAT. 
+	NOTA: esto modifica la paleta de colores! si hubiera algo dibujado, podria
+	verse raro, e incluso, el fondo puede cambiar si el flag clear_fli_back no esta seteado
+    [x] [y] son las coordenadas de la esquina superior izquierda 
+            donde deben ponerse los cuadros.
+    [w] [h] es el ancho y alto del fli (se estirara!)
+    [loop]   Indica la cantidad de veces que deben repetirse los cuadros.
+          *NOTA* Al llegar al final, el script cuenta de nuevo desde el primer frame
+                por lo tanto, el [script_fli] comienza de nuevo.
+    [objeto_fli] Indica el objeto de tipo FLI a reproducir, contenido en el DAT.
+    [script_fli] Indica el script (objeto de tipo TXT) que contiene el sonido,
+                 subtitulos, etc del FLI.
+                 Ver mas adelante la documentacion para saber como es el formato.
+	OK
+---------------------------------------------------------------------
+Formato del [scrip_fli] para el comando "play_fli"
+
+Es un objeto de texto tipo TXT que indica los sonidos, y subtitulos frame x frame
+[NOTA DEBUG: los subtitulos NO estan implementados todavia]
+NOTA: los frames se comienzan contando desde 1
+
+El formato es asi:
+[FRAME_n]
+snd = [sample]
+
+----------
+Ejemplo:
+
+[FRAME_11]
+snd = explosion
+
+[FRAME_48]
+snd = final
